@@ -11,6 +11,14 @@ app.get("/", (req, res) => {
   res.send("Hello!");
 });
 
+app.get("/turkey", (req, res) => {
+  res.send("Dinner, I am hungry for turkey!!!!");
+});
+
+app.get("/urls.json", (req, res) => {
+  res.json(urlDatabase);
+});
+
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
