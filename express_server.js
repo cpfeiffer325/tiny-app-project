@@ -11,8 +11,13 @@ app.get("/", (req, res) => {
   res.send("Hello!");
 });
 
+app.get("/hello", (req, res) => {
+  res.send("<html><body>Hello <b>World</b></body></html>\n");
+});
+
+//messing with the code added an extra fun endpoint for practice
 app.get("/turkey", (req, res) => {
-  res.send("Dinner, I am hungry for turkey!!!!");
+  res.send("Dinner time, I am hungry for turkey!!!!");
 });
 
 app.get("/urls.json", (req, res) => {
