@@ -50,6 +50,7 @@ app.get("/urls", (req, res) => {
 
 // page for adding new urls
 app.get("/urls/new", (req, res) => {
+  console.log("I am creating a new URL");
   res.render("urls_new");
 });
 
@@ -60,17 +61,32 @@ app.get("/u/:shortURL", (req, res) => {
 
 // single url page
 app.get("/urls/:shortURL", (req, res) => {
-    let templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
+  console.log('I am showing the new URL');
+
+  let templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
   res.render("urls_show", templateVars);
 });
 
+// edit an existing url long form
+app.post("/urls/:shortURL", (req, res) => {
+  console.log('I am editing a URL');
+
+  const shortURL = req.params.shortURL;
+  urlDatabase[shortURL] = req.body.longURL;
+
+  res.redirect("/urls");
+});
+
+// delete a url from index
 app.post("/urls/:shortURL/delete", (req, res) => {
+  console.log('I am deleting a URL');
   const shortURL = req.params.shortURL;
   delete urlDatabase[shortURL]; // delete from the database
 
   res.redirect("/urls");
 });
 
+// create a new URL
 app.post("/urls", (req, res) => {
   let shortURL = generateRandomString();
   urlDatabase[shortURL] = req.body.longURL;  // Log the POST request body to the console
