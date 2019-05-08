@@ -14,7 +14,11 @@
   </header>
   <h1>My URLs</h1>
     <u1><% for (let short in urls) { %>
-      <table><%= short %> ----- <%=urls[short] %></table>
+      <table><%= short %> ----- <%=urls[short] %>
+      <form method="POST" action="/urls/<%= short %>/delete">
+        <button type="submit" class="btn btn-warning">Delete 🗑️</button>
+      </form>
+      </table>
       <% } %>
     </u1>
 </body>
