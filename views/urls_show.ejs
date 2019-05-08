@@ -9,8 +9,10 @@
   <title>TinyApp</title>
 </head>
 <body style="font-size:20px; padding:50px; ">
-      <table>Short URL: <%=shortURL%> </table>
-      <table>Long URL: <%=longURL%> </table>
-    </u1>
+  <header>
+    <% include ./partials/_headers %>
+  </header>
+    <h1>Tiny URL for <%=longURL%> </h1>
+    <table><%=shortURL%> </table>
 </body>
 </html>
