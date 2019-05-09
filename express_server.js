@@ -35,11 +35,6 @@ app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
-//messing with the code added an extra fun endpoint for practice
-app.get("/turkey", (req, res) => {
-  res.send("Dinner time, I am hungry for turkey!!!!");
-});
-
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
@@ -80,6 +75,18 @@ app.get("/urls/:shortURL", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
+// registration page for entering email and password
+app.get("/register", (req, res) => {
+  console.log('Registration page');
+
+  let templateVars = {
+    email: req.params.email,
+    password: req.params.password,
+    username: null
+  };
+  res.render("urls_registration", templateVars);
+});
+
 // edit an existing url long form
 app.post("/urls/:shortURL", (req, res) => {
   console.log('I am editing a URL');
@@ -107,6 +114,28 @@ app.post("/urls", (req, res) => {
   res.redirect("/urls/" + shortURL);
 });
 
+app.post("/register", (req, res) => {
+  console.log(email, password);
+});
+
+
+//   let loggedInUSer = null
+//   for(userID in userDB) {
+//   const user = userDB[userID]
+//   if (user.username ==== username && user.password === password) {
+//   loggedInUSer = user
+//   break
+//   }
+
+//   if (!loggedInUSer) {
+//     res.sent("Not logged in")
+//   }
+
+// }
+
+//   res.json({email, password})
+// });
+
 app.post("/login", (req, res) => {
   console.log('user is entering a login name');
   res.cookie("username", req.body.username);
@@ -119,7 +148,6 @@ app.post("/logout", (req, res) => {
   res.clearCookie("username");
   res.redirect("/urls");
 });
-
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
