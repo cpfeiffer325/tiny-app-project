@@ -15,6 +15,15 @@ function generateRandomString() {
   return result.toString();
 }
 
+function emailLookup (email) {
+  for (let id in users) {
+    console.log(id);
+    if (email === users[id].email) {
+    return users[id];
+    }
+  }
+}
+
 //npm install ejs
 app.set("view engine", "ejs");
 // function to parse the body of the incoming url
@@ -135,12 +144,22 @@ app.post("/urls", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
-  const userRandomID = generateRandomString();
-  users[userRandomID] = {id: userRandomID, email: req.body.email, password: req.body.password};
-  res.cookie('user_id', users[userRandomID].id);
-  console.log(users);
+  let email = req.body.email;
+  let user = emailLookup(email);
+  // let test = user.email;
+  console.log(user);
+  // console.log(test);
 
-  res.redirect("/urls");
+  if (!req.body.email || !req.body.password || user) {
+    res.send("400 Bad Request");
+  } else {
+    const userRandomID = generateRandomString();
+    users[userRandomID] = {id: userRandomID, email: req.body.email, password: req.body.password};
+    res.cookie('user_id', users[userRandomID].id);
+    console.log(users);
+
+    res.redirect("/urls");
+  }
 });
 
 
