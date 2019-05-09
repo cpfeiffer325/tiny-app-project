@@ -17,15 +17,29 @@ function generateRandomString() {
 
 //npm install ejs
 app.set("view engine", "ejs");
+// function to parse the body of the incoming url
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 
-let urlDatabase = {
+const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
 
-// function to parse the body of the incoming url
+const users = {
+  "userRandomID": {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur"
+  },
+ "user2RandomID": {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk"
+  }
+};
+
+// ---------------------------- Get Requests ----------------------------
 
 app.get("/", (req, res) => {
   res.send("Hello!");
@@ -43,7 +57,8 @@ app.get("/urls.json", (req, res) => {
 app.get("/urls", (req, res) => {
   let templateVars = {
     urls: urlDatabase,
-    username: req.cookies["username"]
+    username: req.cookies["username"],
+    user_id: req.cookies["user_id"]
   };
   res.render("urls_index", templateVars);
 });
@@ -53,7 +68,8 @@ app.get("/urls/new", (req, res) => {
   console.log("I am creating a new URL");
   let templateVars = {
     urls: urlDatabase,
-    username: req.cookies["username"]
+    username: req.cookies["username"],
+    user_id: req.cookies["user_id"]
   };
   res.render("urls_new", templateVars);
 });
@@ -70,22 +86,26 @@ app.get("/urls/:shortURL", (req, res) => {
   let templateVars = {
     shortURL: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL],
-    username: req.cookies["username"]
+    username: req.cookies["username"],
+    user_id: req.cookies["user_id"]
   };
   res.render("urls_show", templateVars);
 });
 
 // registration page for entering email and password
 app.get("/register", (req, res) => {
-  console.log('Registration page');
+  console.log('User is registering a new email and password');
 
   let templateVars = {
     email: req.params.email,
     password: req.params.password,
-    username: null
+    username: req.cookies["username"],
+    user_id: req.cookies["user_id"]
   };
   res.render("urls_registration", templateVars);
 });
+
+// ---------------------------- Pull Requests ----------------------------
 
 // edit an existing url long form
 app.post("/urls/:shortURL", (req, res) => {
@@ -115,7 +135,12 @@ app.post("/urls", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
-  console.log(email, password);
+  const userRandomID = generateRandomString();
+  users[userRandomID] = {id: userRandomID, email: req.body.email, password: req.body.password};
+  res.cookie('user_id', users[userRandomID].id);
+  console.log(users);
+
+  res.redirect("/urls");
 });
 
 
