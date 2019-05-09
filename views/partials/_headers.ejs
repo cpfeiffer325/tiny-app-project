@@ -1,5 +1,19 @@
-<h1>Tiny URL App</h1>
+<h1><a href="/urls/">Tiny URL App</a></h1>
 <a href="/urls/new">Creating a new URL</a>
 <p></p>
-<a href="/urls/">Summary of URLs</a>
-<p></p>
+
+<% if (username) {%>
+  <form class="form-inline" action="/logout" method="POST">
+    <div class="form-group mb-2">
+      <h3>Good day <%=username%>!</h3>
+      <button type="submit" class="btn btn-primary">Logout</button>
+    </div>
+  </form>
+<%} else {%>
+<form class="form-inline" action="/login" method="POST">
+  <div class="form-group mb-2">
+    <input class="form-control" type="text" name="username" placeholder="Larry Johnson" style="width: 300px; margin: 1em">
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </div>
+</form>
+<%}%>
