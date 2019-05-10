@@ -64,13 +64,16 @@ app.get("/urls.json", (req, res) => {
 // urls page
 app.get("/urls", (req, res) => {
 
-
-  let templateVars = {
-    urls: urlDatabase,
-    username: req.cookies["username"],
-    user: users[req.cookies.user_id]
-  };
-  res.render("urls_index", templateVars);
+  if (!req.cookies.user_id) {
+    res.redirect("/login");
+  } else {
+    let templateVars = {
+      urls: urlDatabase,
+      username: req.cookies["username"],
+      user: users[req.cookies.user_id]
+    };
+    res.render("urls_index", templateVars);
+  }
 });
 
 // page for adding new urls
@@ -141,7 +144,7 @@ app.post("/urls/:shortURL", (req, res) => {
   console.log('I am editing a URL');
 
   const shortURL = req.params.shortURL;
-  urlDatabase[shortURL] = req.body.longURL;
+  urlDatabase[shortURL] = {longURL: req.body.longURL, user_ID: req.cookies.user_id};
 
   res.redirect("/urls");
 });
@@ -158,7 +161,7 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 // create a new URL
 app.post("/urls", (req, res) => {
   let shortURL = generateRandomString();
-  urlDatabase[shortURL] = req.body.longURL;  // Log the POST request body to the console
+  urlDatabase[shortURL] = {longURL: req.body.longURL, user_ID: req.cookies.user_id};  // Log the POST request body to the console
   console.log(urlDatabase);
   res.redirect("/urls/" + shortURL);
 });
