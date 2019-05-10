@@ -5,15 +5,11 @@
 <% if (user) {%>
   <form class="form-inline" action="/logout" method="POST">
     <div class="form-group mb-2">
-      <h3>Good day <%=user.email%>!</h3>
+      <h3>Good day <%=user.email%>!     </h3>
       <button type="submit" class="btn btn-primary">Logout</button>
     </div>
   </form>
 <%} else {%>
-<form class="form-inline" action="/login" method="POST">
-  <div class="form-group mb-2">
-    <input class="form-control" type="text" name="username" placeholder="Larry Johnson" style="width: 300px; margin: 1em">
-    <button type="submit" class="btn btn-primary">Submit</button>
-  </div>
-</form>
+  <a href="/register">Register</a>
+  <a href="/login">Login</a>
 <%}%>

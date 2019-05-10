@@ -117,6 +117,18 @@ app.get("/register", (req, res) => {
   res.render("urls_registration", templateVars);
 });
 
+app.get("/login", (req, res) => {
+  console.log('User is logging in');
+
+  let templateVars = {
+    email: req.params.email,
+    password: req.params.password,
+    username: req.cookies["username"],
+    user: users[req.cookies.user_id]
+  };
+  res.render("urls_login", templateVars);
+});
+
 // ---------------------------- Pull Requests ----------------------------
 // ***********************************************************************
 
@@ -171,10 +183,24 @@ app.post("/register", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  console.log('user is entering a login name');
-  res.cookie("username", req.body.username);
-  console.log("Username is: " + req.body.username);
-  res.redirect("/urls");
+  let email = req.body.email;
+  let user = emailLookup(email);
+  // let test = user.email;
+  console.log(user);
+  // console.log(test);
+
+  if (!user) {
+    res.send("Error 403...........You are not registered");
+  } else if (req.body.password !== user.password) {
+    res.send("Error 403...........AAAAhhhhhhhhh Wrong Password!");
+  } else {
+    const userRandomID = generateRandomString();
+    users[userRandomID] = {id: userRandomID, email: req.body.email, password: req.body.password};
+    res.cookie('user_id', users[userRandomID].id);
+    console.log(users);
+
+    res.redirect("/urls");
+  }
 });
 
 app.post("/logout", (req, res) => {
