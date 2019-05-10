@@ -4,6 +4,9 @@ const app = express();
 const PORT = 8080; // default port 8080
 const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser')
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+
 
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
@@ -182,6 +185,11 @@ app.post("/urls", (req, res) => {
   res.redirect("/urls/" + shortURL);
 });
 
+// var password = "not_password";
+// var hash = bcrypt.hashSync(req.body.password, saltRounds);
+// bcrypt.compareSync(req.body.password, user.password);
+
+// register a new login
 app.post("/register", (req, res) => {
   let email = req.body.email;
   let user = emailLookup(email);
@@ -193,20 +201,21 @@ app.post("/register", (req, res) => {
 
   } else {
     const userRandomID = generateRandomString();
-    users[userRandomID] = {id: userRandomID, email: req.body.email, password: req.body.password};
+    users[userRandomID] = {id: userRandomID, email: req.body.email, password: bcrypt.hashSync(req.body.password, saltRounds)};
     res.cookie('user_id', users[userRandomID].id);
 
     res.redirect("/urls");
   }
 });
 
+// verify login credentials
 app.post("/login", (req, res) => {
   let email = req.body.email;
   let user = emailLookup(email);
 
   if (!user) {
     res.send("Error 403...........You are not registered");
-  } else if (req.body.password !== user.password) {
+  } else if (!bcrypt.compareSync(req.body.password, user.password)) {
     res.send("Error 403...........Ahhhhhhhhhhhh Wrong Password!");
   } else {
     res.cookie('user_id', user.id);
