@@ -31,6 +31,14 @@ function emailLookup (email) {
   }
 }
 
+function urlsForUser(id) {
+  for (let short in urlDatabase) {
+    if (id === urlDatabase[short].user_ID) {
+      return urlDatabase[short].long;
+    }
+  }
+}
+
 // ---------------------------- Objects ----------------------------------
 // ***********************************************************************
 
@@ -100,10 +108,10 @@ app.get("/u/:shortURL", (req, res) => {
 // single url page
 app.get("/urls/:shortURL", (req, res) => {
   console.log('I am showing the new URL');
-
+  console.log(req.params.shortURL);
   let templateVars = {
     shortURL: req.params.shortURL,
-    longURL: urlDatabase[req.params.shortURL],
+    longURL: urlDatabase[req.params.shortURL].longURL,
     username: req.cookies["username"],
     user: users[req.cookies.user_id]
   };

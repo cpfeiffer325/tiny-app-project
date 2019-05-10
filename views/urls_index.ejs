@@ -14,7 +14,7 @@
   </header>
   <h1>My URLs</h1>
     <u1><% for (let short in urls) { %>
-      <table style="height:12px"><strong><%= short %></strong> -----> <%=urls[short] %>
+      <table style="height:12px"><strong><%= short %></strong> -----> <%=urls[short].longURL %>
       <a href="/urls/<%= short %>"> edit  </a>
       <form method="POST" action="/urls/<%= short %>/delete">
         <button type="submit" class="btn btn-warning"><strong style="color:red">DELETE 🗑️</strong></button>
