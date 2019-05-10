@@ -2,10 +2,10 @@
 <a href="/urls/new">Creating a new URL</a>
 <p></p>
 
-<% if (username) {%>
+<% if (user) {%>
   <form class="form-inline" action="/logout" method="POST">
     <div class="form-group mb-2">
-      <h3>Good day <%=username%>!</h3>
+      <h3>Good day <%=user.email%>!</h3>
       <button type="submit" class="btn btn-primary">Logout</button>
     </div>
   </form>

@@ -5,6 +5,13 @@ const PORT = 8080; // default port 8080
 const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser')
 
+app.set("view engine", "ejs");
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(cookieParser());
+
+// ---------------------------- Functions --------------------------------
+// ***********************************************************************
+
 function generateRandomString() {
   var result           = '';
   var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -24,11 +31,9 @@ function emailLookup (email) {
   }
 }
 
-//npm install ejs
-app.set("view engine", "ejs");
-// function to parse the body of the incoming url
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(cookieParser());
+// ---------------------------- Objects ----------------------------------
+// ***********************************************************************
+
 
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -36,19 +41,13 @@ const urlDatabase = {
 };
 
 const users = {
-  "userRandomID": {
-    id: "userRandomID",
-    email: "user@example.com",
-    password: "purple-monkey-dinosaur"
-  },
- "user2RandomID": {
-    id: "user2RandomID",
-    email: "user2@example.com",
-    password: "dishwasher-funk"
-  }
+  "userRandomID": {id: "userRandomID", email: "user@example.com", password: "purple-monkey-dinosaur"},
+  "user2RandomID": {id: "user2RandomID", email: "user2@example.com", password: "dishwasher-funk"}
 };
 
-// ---------------------------- Get Requests ----------------------------
+// ---------------------------- Get Requests -----------------------------
+// ***********************************************************************
+
 
 app.get("/", (req, res) => {
   res.send("Hello!");
@@ -64,10 +63,12 @@ app.get("/urls.json", (req, res) => {
 
 // urls page
 app.get("/urls", (req, res) => {
+
+
   let templateVars = {
     urls: urlDatabase,
     username: req.cookies["username"],
-    user_id: req.cookies["user_id"]
+    user: users[req.cookies.user_id]
   };
   res.render("urls_index", templateVars);
 });
@@ -78,9 +79,11 @@ app.get("/urls/new", (req, res) => {
   let templateVars = {
     urls: urlDatabase,
     username: req.cookies["username"],
-    user_id: req.cookies["user_id"]
+    user: {email: "abc@123.com"}
   };
   res.render("urls_new", templateVars);
+  console.log("These are my users: " + users) ;
+  console.log("These are my cookies: " + req.cookies.user_id);
 });
 
 app.get("/u/:shortURL", (req, res) => {
@@ -96,7 +99,7 @@ app.get("/urls/:shortURL", (req, res) => {
     shortURL: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL],
     username: req.cookies["username"],
-    user_id: req.cookies["user_id"]
+    user: users[req.cookies.user_id]
   };
   res.render("urls_show", templateVars);
 });
@@ -109,12 +112,14 @@ app.get("/register", (req, res) => {
     email: req.params.email,
     password: req.params.password,
     username: req.cookies["username"],
-    user_id: req.cookies["user_id"]
+    user: users[req.cookies.user_id]
   };
   res.render("urls_registration", templateVars);
 });
 
 // ---------------------------- Pull Requests ----------------------------
+// ***********************************************************************
+
 
 // edit an existing url long form
 app.post("/urls/:shortURL", (req, res) => {
@@ -150,8 +155,11 @@ app.post("/register", (req, res) => {
   console.log(user);
   // console.log(test);
 
-  if (!req.body.email || !req.body.password || user) {
+  if (!req.body.email || !req.body.password) {
     res.send("400 Bad Request");
+  } else if (user) {
+    res.send("You are already registered");
+
   } else {
     const userRandomID = generateRandomString();
     users[userRandomID] = {id: userRandomID, email: req.body.email, password: req.body.password};
@@ -161,24 +169,6 @@ app.post("/register", (req, res) => {
     res.redirect("/urls");
   }
 });
-
-
-//   let loggedInUSer = null
-//   for(userID in userDB) {
-//   const user = userDB[userID]
-//   if (user.username ==== username && user.password === password) {
-//   loggedInUSer = user
-//   break
-//   }
-
-//   if (!loggedInUSer) {
-//     res.sent("Not logged in")
-//   }
-
-// }
-
-//   res.json({email, password})
-// });
 
 app.post("/login", (req, res) => {
   console.log('user is entering a login name');
@@ -193,6 +183,21 @@ app.post("/logout", (req, res) => {
   res.redirect("/urls");
 });
 
+// ---------------------------- Listening Port ---------------------------
+// ***********************************************************************
+
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
+
+
+
+
+//   if (!loggedInUser) {
+//     res.sent("Not logged in")
+//   }
+
+// }
+
+//   res.json({email, password})
+// });
