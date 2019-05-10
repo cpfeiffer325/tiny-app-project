@@ -24,7 +24,6 @@ function generateRandomString() {
 
 function emailLookup (email) {
   for (let id in users) {
-    console.log(id);
     if (email === users[id].email) {
     return users[id];
     }
@@ -75,8 +74,6 @@ app.get("/urls.json", (req, res) => {
 // urls page
 app.get("/urls", (req, res) => {
   let userUrls = urlsForUser(req.cookies.user_id);
-  console.log(req.cookies.user_id);
-  console.log(userUrls);
 
   if (!req.cookies.user_id) {
     res.redirect("/login");
@@ -99,7 +96,6 @@ app.get("/urls/new", (req, res) => {
     console.log("I am creating a new URL");
     let templateVars = {
       urls: urlDatabase,
-      username: req.cookies["username"],
       user: users[req.cookies.user_id]
     };
     res.render("urls_new", templateVars);
@@ -108,18 +104,15 @@ app.get("/urls/new", (req, res) => {
 
 app.get("/u/:shortURL", (req, res) => {
   const longURL = urlDatabase[req.params.shortURL].longURL;
-  console.log(urlDatabase[req.params.shortURL]);
   res.redirect(longURL);
 });
 
 // single url page
 app.get("/urls/:shortURL", (req, res) => {
   console.log('I am showing the new URL');
-  console.log(req.params.shortURL);
   let templateVars = {
     shortURL: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL].longURL,
-    username: req.cookies["username"],
     user: users[req.cookies.user_id]
   };
   res.render("urls_show", templateVars);
@@ -132,7 +125,6 @@ app.get("/register", (req, res) => {
   let templateVars = {
     email: req.params.email,
     password: req.params.password,
-    username: req.cookies["username"],
     user: users[req.cookies.user_id]
   };
   res.render("urls_registration", templateVars);
@@ -144,7 +136,6 @@ app.get("/login", (req, res) => {
   let templateVars = {
     email: req.params.email,
     password: req.params.password,
-    username: req.cookies["username"],
     user: users[req.cookies.user_id]
   };
   res.render("urls_login", templateVars);
@@ -160,11 +151,11 @@ app.post("/urls/:shortURL", (req, res) => {
   let id = req.cookies.user_id;
   let user = emailLookup(id);
 
-  if (!user) {
+  if (!req.cookies.user_id) {
     res.send("Error 403...... You do not have edit access");
   } else {
     const shortURL = req.params.shortURL;
-    urlDatabase[shortURL] = {longURL: req.body.longURL, user_ID: req.cookies.user_id};
+    urlDatabase[shortURL] = {longURL: req.body.longURL, userID: req.cookies.user_id};
   }
   res.redirect("/urls");
 });
@@ -188,16 +179,12 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 app.post("/urls", (req, res) => {
   let shortURL = generateRandomString();
   urlDatabase[shortURL] = {longURL: req.body.longURL, userID: req.cookies.user_id};  // Log the POST request body to the console
-  console.log(urlDatabase);
   res.redirect("/urls/" + shortURL);
 });
 
 app.post("/register", (req, res) => {
   let email = req.body.email;
   let user = emailLookup(email);
-  // let test = user.email;
-  console.log(user);
-  // console.log(test);
 
   if (!req.body.email || !req.body.password) {
     res.send("400 Bad Request");
@@ -208,7 +195,6 @@ app.post("/register", (req, res) => {
     const userRandomID = generateRandomString();
     users[userRandomID] = {id: userRandomID, email: req.body.email, password: req.body.password};
     res.cookie('user_id', users[userRandomID].id);
-    console.log(users);
 
     res.redirect("/urls");
   }
@@ -217,19 +203,13 @@ app.post("/register", (req, res) => {
 app.post("/login", (req, res) => {
   let email = req.body.email;
   let user = emailLookup(email);
-  // let test = user.email;
-  console.log(user);
-  // console.log(test);
 
   if (!user) {
     res.send("Error 403...........You are not registered");
   } else if (req.body.password !== user.password) {
     res.send("Error 403...........Ahhhhhhhhhhhh Wrong Password!");
   } else {
-    const userRandomID = generateRandomString();
     res.cookie('user_id', user.id);
-    console.log(users);
-
     res.redirect("/urls");
   }
 });
