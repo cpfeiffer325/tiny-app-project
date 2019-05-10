@@ -205,7 +205,7 @@ app.post("/login", (req, res) => {
 
 app.post("/logout", (req, res) => {
   console.log('user is logging out');
-  res.clearCookie("username");
+  res.clearCookie("user_id");
   res.redirect("/urls");
 });
 
