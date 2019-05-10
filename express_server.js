@@ -76,7 +76,7 @@ app.get("/urls", (req, res) => {
     res.redirect("/login");
   } else {
     let templateVars = {
-      urls: urlDatabase,
+      urls: urlsForUser(req.cookies.user_id),
       username: req.cookies["username"],
       user: users[req.cookies.user_id]
     };
@@ -209,8 +209,7 @@ app.post("/login", (req, res) => {
     res.send("Error 403...........Ahhhhhhhhhhhh Wrong Password!");
   } else {
     const userRandomID = generateRandomString();
-    users[userRandomID] = {id: userRandomID, email: req.body.email, password: req.body.password};
-    res.cookie('user_id', users[userRandomID].id);
+    res.cookie('user_id', user.id);
     console.log(users);
 
     res.redirect("/urls");
