@@ -32,11 +32,13 @@ function emailLookup (email) {
 }
 
 function urlsForUser(id) {
+  let returnDatabase = {};
   for (let short in urlDatabase) {
-    if (id === urlDatabase[short].user_ID) {
-      return urlDatabase[short].long;
+    if (id === urlDatabase[short].userID) {
+      returnDatabase[short] = urlDatabase[short].longURL;
     }
   }
+  return returnDatabase;
 }
 
 // ---------------------------- Objects ----------------------------------
@@ -45,7 +47,7 @@ function urlsForUser(id) {
 
 const urlDatabase = {
   "b2xVn2": { longURL: "http://www.lighthouselabs.ca", userID: "userRandomID" },
-  "9sm5xK": { longURL: "http://www.google.com", userID: "user2RandomID" }
+  "9sm5xK": { longURL: "http://www.google.com", userID: "userRandomID" }
 };
 
 const users = {
@@ -67,16 +69,20 @@ app.get("/hello", (req, res) => {
 
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
+  res.json(users);
 });
 
 // urls page
 app.get("/urls", (req, res) => {
+  let userUrls = urlsForUser(req.cookies.user_id);
+  console.log(req.cookies.user_id);
+  console.log(userUrls);
 
   if (!req.cookies.user_id) {
     res.redirect("/login");
   } else {
     let templateVars = {
-      urls: urlsForUser(req.cookies.user_id),
+      urls: userUrls,
       username: req.cookies["username"],
       user: users[req.cookies.user_id]
     };
@@ -101,7 +107,8 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/u/:shortURL", (req, res) => {
-  const longURL = urlDatabase[req.params.shortURL];
+  const longURL = urlDatabase[req.params.shortURL].longURL;
+  console.log(urlDatabase[req.params.shortURL]);
   res.redirect(longURL);
 });
 
@@ -150,26 +157,37 @@ app.get("/login", (req, res) => {
 // edit an existing url long form
 app.post("/urls/:shortURL", (req, res) => {
   console.log('I am editing a URL');
+  let id = req.cookies.user_id;
+  let user = emailLookup(id);
 
-  const shortURL = req.params.shortURL;
-  urlDatabase[shortURL] = {longURL: req.body.longURL, user_ID: req.cookies.user_id};
-
+  if (!user) {
+    res.send("Error 403...... You do not have edit access");
+  } else {
+    const shortURL = req.params.shortURL;
+    urlDatabase[shortURL] = {longURL: req.body.longURL, user_ID: req.cookies.user_id};
+  }
   res.redirect("/urls");
 });
 
 // delete a url from index
 app.post("/urls/:shortURL/delete", (req, res) => {
   console.log('I am deleting a URL');
-  const shortURL = req.params.shortURL;
-  delete urlDatabase[shortURL]; // delete from the database
+  // let id = req.cookies.user_id;
+  // let user = emailLookup(id);
 
+  if (!req.cookies.user_id) {
+    res.send("Error 403...... You do not have delete access");
+  } else {
+    const shortURL = req.params.shortURL;
+    delete urlDatabase[shortURL]; // delete from the database
+  }
   res.redirect("/urls");
 });
 
 // create a new URL
 app.post("/urls", (req, res) => {
   let shortURL = generateRandomString();
-  urlDatabase[shortURL] = {longURL: req.body.longURL, user_ID: req.cookies.user_id};  // Log the POST request body to the console
+  urlDatabase[shortURL] = {longURL: req.body.longURL, userID: req.cookies.user_id};  // Log the POST request body to the console
   console.log(urlDatabase);
   res.redirect("/urls/" + shortURL);
 });
