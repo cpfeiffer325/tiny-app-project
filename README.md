@@ -1,5 +1,5 @@
 # Tiny URL App
-A four-day project to buildmy very first web app using Node. The app will allow users to shorten long URLs much like TinyURL.com and bit.ly do.
+A four-day project to build my very first web app using Node. The app will allow users to shorten long URLs much like TinyURL.com and bit.ly do.
 
 ## Description and Functionality
 Build an HTTP Server that handles requests from the browser (client). Utilize JavaScript, Node concepts, and Express.
