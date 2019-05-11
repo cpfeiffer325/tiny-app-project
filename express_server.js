@@ -73,7 +73,7 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/urls.json", (req, res) => {
-  res.json(urlDatabase, users);
+  res.json(users);
 });
 
 // urls page
