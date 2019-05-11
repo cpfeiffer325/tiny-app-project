@@ -10,8 +10,8 @@ Build an HTTP Server that handles requests from the browser (client). Utilize Ja
 
 ## Final Product
 
-!["Screenshot of register page"]()
-!["Screenshot of the URLs page"]()
+!["Screenshot of register page"](https://github.com/cpfeiffer325/tiny-app-project/blob/master/docs/Registration_Page.png)
+!["Screenshot of the URLs page"](https://github.com/cpfeiffer325/tiny-app-project/blob/master/docs/Screenshot_URLs_Page.png)
 
 ## Dependencies
 - node.js
