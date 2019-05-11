@@ -167,8 +167,6 @@ app.post("/urls/:shortURL", (req, res) => {
 // delete a url from index
 app.post("/urls/:shortURL/delete", (req, res) => {
   console.log('I am deleting a URL');
-  // let id = req.session.user_id;
-  // let user = emailLookup(id);
 
   if (!req.session.user_id) {
     res.send("Error 403...... You do not have delete access");
@@ -185,10 +183,6 @@ app.post("/urls", (req, res) => {
   urlDatabase[shortURL] = {longURL: req.body.longURL, userID: req.session.user_id};  // Log the POST request body to the console
   res.redirect("/urls/" + shortURL);
 });
-
-// var password = "not_password";
-// var hash = bcrypt.hashSync(req.body.password, saltRounds);
-// bcrypt.compareSync(req.body.password, user.password);
 
 // register a new login
 app.post("/register", (req, res) => {
