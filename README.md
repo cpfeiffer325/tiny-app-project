@@ -26,6 +26,6 @@ Build an HTTP Server that handles requests from the browser (client). Utilize Ja
 
 ## Getting Started
 - Install all dependencies and dev dependencies using npm install
-- Run npm start to activate nodemon
+- Type "run npm start" in the terminal to activate nodemon and server to run the browser
   - open web browser and go to http://localhost:8080/register to begin using app
 
