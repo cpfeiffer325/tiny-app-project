@@ -8,6 +8,13 @@ Build an HTTP Server that handles requests from the browser (client). Utilize Ja
 - Allow users to only create, view, edit and delete their own shortened URLs
 - Encrypt user password and cookies during sessions
 
+## Getting Started
+- Fork and then clone repository
+- In terminal navigate to tiny-app folder
+- Install all dependencies and dev dependencies using ```npm install```
+- In terminal type ```run npm start``` in the terminal to activate nodemon and server to run the browser
+  - open web browser with http://localhost:8080/register to begin using app
+
 ## Final Product
 ### Login Screen
 !["Screenshot of register page"](https://github.com/cpfeiffer325/tiny-app-project/blob/master/docs/Registration_Page.png)
@@ -25,9 +32,3 @@ Build an HTTP Server that handles requests from the browser (client). Utilize Ja
 
 ## Dev Dependencies
 - nodemon
-
-## Getting Started
-- Install all dependencies and dev dependencies using npm install
-- Type "run npm start" in the terminal to activate nodemon and server to run the browser
-  - open web browser and go to http://localhost:8080/register to begin using app
-
