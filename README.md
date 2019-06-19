@@ -9,8 +9,10 @@ Build an HTTP Server that handles requests from the browser (client). Utilize Ja
 - Encrypt user password and cookies during sessions
 
 ## Final Product
-
+### Login Screen
 !["Screenshot of register page"](https://github.com/cpfeiffer325/tiny-app-project/blob/master/docs/Registration_Page.png)
+
+### Main Index Page
 !["Screenshot of the URLs page"](https://github.com/cpfeiffer325/tiny-app-project/blob/master/docs/Screenshot_URLs_Page.png)
 
 ## Dependencies
